@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-color: #FFB6C1; /* Light Pink */
+        --secondary-color: #E6E6FA; /* Lavender */
+        --text-color: #4A4A4A;
+        --background-color: #FFF0F5; /* Lavender Blush */
+        --light-text: #f5f5f5;
+        --accent-color: #FFF0F5; /* Using lavender blush as accent color */
+        --animation-timing: 0.5s;
+    }
+
+    body {
+        background-color: var(--background-color);
+    }
+
+    h1,
+    h2,
+    h3 {
+        font-family: 'Playfair Display', serif;
+        color: var(--text-color);
+    }
+
+    @keyframes shine {
+        0% {
+            left: -100%;
+        }
+
+        20% {
+            left: 100%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: transform var(--animation-timing), box-shadow var(--animation-timing);
+        margin-top: 60px;
+    }
+
+    .profile-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(255, 182, 193, 0.3);
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: var(--text-color);
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .profile-image {
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background-color: white;
+        margin: 0 auto 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid rgba(255, 255, 255, 0.5);
+        transition: transform 0.3s ease;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 182, 193, 0.4);
+        }
+
+        70% {
+            box-shadow: 0 0 0 10px rgba(255, 182, 193, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 182, 193, 0);
+        }
+    }
+
+    .profile-image:hover {
+        transform: scale(1.05);
+    }
+
+    .profile-icon {
+        font-size: 60px;
+        color: var(--primary-color);
+    }
+
+    .profile-content {
+        padding: 2.5rem;
+    }
+
+    .profile-info {
+        margin-bottom: 2.5rem;
+    }
+
+    .info-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.2rem;
+        padding-bottom: 0.8rem;
+        border-bottom: 1px solid #eee;
+        transition: transform var(--animation-timing);
+    }
+
+    .info-group:hover {
+        transform: translateX(5px);
+        border-bottom-color: var(--primary-color);
+    }
+
+    .info-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        font-size: 1.3rem;
+        border-radius: 50%;
+        background-color: var(--secondary-color);
+        margin-right: 1rem;
+        transition: all var(--animation-timing);
+    }
+
+    .info-group:hover .info-icon {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #f1707d, #cc5460);
+        color: white;
+        border: none;
+    }
+
+    .btn-danger:hover {
+        background: linear-gradient(135deg, #aa1e2c, #4a070d);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.2rem;
+        margin-top: 2.5rem;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.9rem 1.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-align: center;
+        flex: 1;
+        min-width: 140px;
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.5px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: 0.5s;
+        z-index: -1;
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-color), #f9a3b7);
+        color: var(--text-color);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #FF9EB5, #be5c71);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(255, 182, 193, 0.5);
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        border: 1px solid var(--primary-color);
+    }
+
+    .btn-secondary:hover {
+        background-color: #D8D8F5; /* Slightly darker lavender */
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(230, 230, 250, 0.6);
+    }
+</style>
+{% endblock %}
+
+{% block main_block %}
+<div class="container">
+    <div class="profile-card">
+        <div class="profile-header">
+            <div class="profile-image">
+                <i class="fas fa-user profile-icon"></i>
+            </div>
+            <h2>{{ current_user.name }}</h2>
+            <p>Member since January 2023</p>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-info">
+                <div class="info-group">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <p><strong>Email</strong></p>
+                        <p>{{ current_user.email }}</p>
+                    </div>
+                </div>
+    
+                <div class="info-group">
+                    <div class="info-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>
+                        <p><strong>Mobile</strong></p>
+                        <p>{{ current_user.mobile }}</p>
+                    </div>
+                </div>
+    
+                <div class="info-group">
+                    <div class="info-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div>
+                        <p><strong>Gender</strong></p>
+                        <p>{{ current_user.gender }}</p>
+                    </div>
+                </div>
+    
+                <div class="info-group">
+                    <div class="info-icon">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <div>
+                        <p><strong>Age</strong></p>
+                        <p>{{ current_user.age }}</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="action-buttons">
+                <a href="{{ url_for('update') }}" class="btn btn-primary">Edit Profile</a>
+                <a href="{{ url_for('delete') }}" class="btn btn-danger">Delete Profile</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

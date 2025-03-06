@@ -1,0 +1,272 @@
+{% extends 'base.html' %}
+    {% block content %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFB6C1;
+            --secondary-color: #FF7F9F;
+            --text-color: #333;
+            --background-color: #FFF0F5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 2rem;
+        }
+
+        .helpline-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .helpline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .helpline-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(255,182,202,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .helpline-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255,182,202,0.3);
+        }
+
+        .helpline-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .support-form {
+            background-color: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 10px 20px rgba(255,182,202,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* Popup Styles */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .popup-content {
+            background-color: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 40px rgba(255,182,202,0.3);
+        }
+
+        .popup-content h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .popup-content p {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .popup.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .popup.show .popup-content {
+            transform: scale(1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1rem;
+            }
+
+            .helpline-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .popup-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+{% endblock %}
+{% block main_block %}
+    <div class="container">
+        <header class="helpline-header">
+            <h1>HerWellness Support & Helpline</h1>
+            <p>You're not alone. We're here to support you.</p>
+        </header>
+
+        <section class="helpline-grid">
+            <div class="helpline-card">
+                <h3>National Helpline</h3>
+                <p>24/7 Mental Health Support</p>
+                <p>📞 +1-800-273-8255</p>
+            </div>
+            <div class="helpline-card">
+                <h3>Women's Support Line</h3>
+                <p>Specialized Counseling</p>
+                <p>📞 +1-888-247-HELP</p>
+            </div>
+            <div class="helpline-card">
+                <h3>Crisis Intervention</h3>
+                <p>Immediate Emotional Support</p>
+                <p>📞 +1-800-SUPPORT</p>
+            </div>
+        </section>
+
+        <section class="support-form">
+            <h2>Request Personalized Support</h2>
+            <form id="supportForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">How Can We Help?</label>
+                    <textarea id="message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Send Support Request</button>
+            </form>
+        </section>
+
+        <div id="supportPopup" class="popup">
+            <div class="popup-content">
+                <span class="close-popup">&times;</span>
+                <h2>Support Request Received</h2>
+                <p>Thank you for reaching out. Our compassionate support team will contact you shortly.</p>
+                <p>Your mental health matters to us.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const supportForm = document.getElementById('supportForm');
+            const supportPopup = document.getElementById('supportPopup');
+            const closePopup = document.querySelector('.close-popup');
+
+            supportForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                // Here you would typically send the form data to a server
+                // For this example, we'll just show the popup
+                supportPopup.classList.add('show');
+                supportForm.reset();
+            });
+
+            closePopup.addEventListener('click', () => {
+                supportPopup.classList.remove('show');
+            });
+
+            // Close popup if clicked outside
+            supportPopup.addEventListener('click', (e) => {
+                if (e.target === supportPopup) {
+                    supportPopup.classList.remove('show');
+                }
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Wellness - Sign Up</title>
+    <style>
+        :root {
+            --primary-color: #FFB6C1;  /* Light Pink */
+            --secondary-color: #E6E6FA;  /* Lavender */
+            --text-color: #4A4A4A;
+            --background-color: #FFF0F5;  /* Lavender Blush */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .registration-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            background-color: var(--secondary-color);
+        }
+
+        .registration-container h2 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+        }
+
+        .form-group input:focus, 
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(255, 182, 193, 0.5);
+        }
+
+        .form-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .terms-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #FF89A7;  /* Slightly darker pink */
+        }
+
+        .error-message {
+            color: #DC143C;  /* Crimson for error messages */
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <h2>Create Your HerWellness Account</h2>
+        <form id="registrationForm" method="POST" action="/register">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+                <div id="nameError" class="error-message">Please enter your full name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+                <div id="emailError" class="error-message">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                type="password"
+                name="password"
+                id="password"
+                class="form-control"
+                placeholder="Create a password"
+                pattern="^(?=.*\d)(?=.*[a-zA-Z]).{8,}$"
+                title="Must contain at least one number, one uppercase letter, one lowercase letter, one special character, and be at least 8 characters long"
+                required
+              />
+              <ul class="password-requirements">
+                <li>At least 8 characters long</li>
+                <li>Contains at least one uppercase letter</li>
+                <li>Contains at least one number</li>
+                <li>Contains at least one special character</li>
+              </ul>
+                <div id="passwordError" class="error-message">Password must be at least 8 characters long</div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+                <div id="confirmPasswordError" class="error-message">Passwords do not match</div>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" required>
+                <div id="mobileError" class="error-message">Please enter a valid mobile number</div>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" required min="13">
+                <div id="ageError" class="error-message">You must be at least 13 years old</div>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                    <option value="prefer_not_to_say">Prefer Not to Say</option>
+                </select>
+                <div id="genderError" class="error-message">Please select your gender</div>
+            </div>
+
+            <div class="terms-container">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the Terms and Conditions</label>
+            </div>
+
+            <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // Name validation
+            const name = document.getElementById('name');
+            const nameError = document.getElementById('nameError');
+            if (name.value.trim() === '') {
+                nameError.style.display = 'block';
+                isValid = false;
+            } else {
+                nameError.style.display = 'none';
+            }
+
+            // Email validation
+            const email = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+
+            // Password validation
+            const password = document.getElementById('password');
+            const passwordError = document.getElementById('passwordError');
+            if (password.value.length < 8) {
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else {
+                passwordError.style.display = 'none';
+            }
+
+            // Confirm password validation
+            const confirmPassword = document.getElementById('confirm_password');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            if (password.value !== confirmPassword.value) {
+                confirmPasswordError.style.display = 'block';
+                isValid = false;
+            } else {
+                confirmPasswordError.style.display = 'none';
+            }
+
+            // Mobile validation
+            const mobile = document.getElementById('mobile');
+            const mobileError = document.getElementById('mobileError');
+            const mobileRegex = /^[0-9]{10}$/;
+            if (!mobileRegex.test(mobile.value)) {
+                mobileError.style.display = 'block';
+                isValid = false;
+            } else {
+                mobileError.style.display = 'none';
+            }
+
+            // Age validation
+            const age = document.getElementById('age');
+            const ageError = document.getElementById('ageError');
+            if (age.value < 13) {
+                ageError.style.display = 'block';
+                isValid = false;
+            } else {
+                ageError.style.display = 'none';
+            }
+
+            // Gender validation
+            const gender = document.getElementById('gender');
+            const genderError = document.getElementById('genderError');
+            if (gender.value === '') {
+                genderError.style.display = 'block';
+                isValid = false;
+            } else {
+                genderError.style.display = 'none';
+            }
+
+            // Prevent form submission if validation fails
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFB6C1;
+            --secondary-color: #FF69B4;
+            --background-color: #FFF0F5;
+            --text-color: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            border-radius: 10px 10px 0 0;
+            animation: headerSlideIn 1s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .terms-content {
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .terms-content.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section {
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+            border-left: 7px solid var(--primary-color);
+            padding: 15px;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .section:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border-left-color: var(--secondary-color);
+        }
+
+        .section h2 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .register-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--background-color);
+            border-radius: 10px;
+        }
+
+        .register-btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .register-btn:hover {
+            background-color: var(--primary-color);
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+        }
+
+        @keyframes headerSlideIn {
+            from { 
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .section {
+                padding: 10px;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block main_block %}
+    <div class="container">
+        <header>
+            <h1>HerWellness Terms & Conditions</h1>
+        </header>
+
+        <div class="terms-content">
+            <div class="section">
+                <h2>1. Acceptance of Terms</h2>
+                <p>By accessing HerWellness, you agree to these comprehensive terms designed to protect your mental health journey.</p>
+            </div>
+
+            <div class="section">
+                <h2>2. Privacy & Confidentiality</h2>
+                <p>We prioritize the utmost confidentiality of your mental health data. All personal information is encrypted and securely protected.</p>
+            </div>
+
+            <div class="section">
+                <h2>3. User Responsibilities</h2>
+                <p>Users are expected to provide accurate information and engage with the platform responsibly and ethically.</p>
+            </div>
+
+            <div class="section">
+                <h2>4. Mental Health Disclaimer</h2>
+                <p>HerWellness is a supportive tool complementing professional mental health services, not a replacement for clinical treatment.</p>
+            </div>
+
+            <div class="section">
+                <h2>5. Data Usage & Consent</h2>
+                <p>Your anonymized data helps improve our AI-driven mental wellness recommendations, always with your explicit consent.</p>
+            </div>
+
+            <div class="register-section">
+                <a href="#" class="register-btn">
+                    Proceed to Registration <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animate terms content
+            const termsContent = document.querySelector('.terms-content');
+            setTimeout(() => {
+                termsContent.classList.add('active');
+            }, 500);
+        });
+    </script>
+{% endblock %}

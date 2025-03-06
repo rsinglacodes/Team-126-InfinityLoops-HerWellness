@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HerWellness - Mental Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+            * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FFB6C1;  /* Light Pink */
+            --secondary-color: #E6E6FA;  /* Lavender */
+            --text-color: #4A4A4A;
+            --background-color: #FFF0F5;  /* Lavender Blush */
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar:hover {
+            box-shadow: 0 6px 8px rgba(0,0,0,0.08);
+        }
+
+        .navbar-logo {
+            height: 70px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            margin: 0;
+        }
+
+        .navbar-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 4rem;
+        }
+
+        .navbar-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(255,182,193,0.3);
+        }
+
+        .cta-button:hover {
+            background-color: #FF69B4;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(255,182,193,0.4);
+        }
+
+        /* Hero Section Styles */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            background-color: var(--secondary-color);
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 90%;
+            filter: brightness(0.8);
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+
+        .hero:hover .hero-background {
+            transform: scale(1.05);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 5%;
+            text-align: left;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-color);
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .hero-button {
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .hero-button-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 6px rgba(255,182,193,0.3);
+        }
+
+        .hero-button-secondary {
+            border: 2px solid var(--primary-color);
+            color: var(--text-color);
+            background-color: transparent;
+        }
+
+        .hero-button:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Services Section */
+        .services {
+            background-color: white;
+            padding: 6rem 5%;
+            text-align: center;
+        }
+
+        .services-title {
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            color: var(--text-color);
+        }
+
+        .services-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 2.5rem;
+        }
+
+        .service-card {
+            background-color: var(--secondary-color);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 25px rgba(0,0,0,0.1);
+        }
+
+        .service-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+        /* Previous styles remain the same, with slight footer modifications */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-links a {
+            list-style: none;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+        .footer-links {
+    list-style: none; /* Removes bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    list-style: none; /* Ensures no bullets on list items */
+}
+
+
+        @media (max-width: 768px) {
+            .footer {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+        <!-- Navigation -->
+        <nav class="navbar">
+            <img src="../static/images/logo.png" alt="HerWellness Logo" class="navbar-logo">
+            <div class="navbar-links">
+                <a href="#">Home</a>
+                <a href="{{url_for('pcod')}}">PCOD/PCOS Tracker</a>
+                <a href="{{url_for('sleep')}}">Sleep Tracking</a>
+                <a href="{{url_for('meditation')}}">Meditation</a>
+            </div>
+            <a href="{{url_for('login')}}" class="cta-button">Login</a>
+        </nav>
+    
+        <!-- Hero Section -->
+        <section class="hero">
+            <img src="https://static.euronews.com/articles/stories/08/54/62/10/1200x675_cmsv2_11da0003-abf8-5c57-a52a-52b33a055755-8546210.jpg" alt="Mental Wellness Background" class="hero-background">
+            <div class="hero-content">
+                <h1 class="hero-title">Nurturing Minds, Transforming Lives</h1>
+                <p class="hero-subtitle">Addressing unmet mental health needs today, driving hope for tomorrow. Personalized support, compassionate care.</p>
+                <div class="hero-buttons">
+                    <a href="{{url_for('learn')}}" class="hero-button hero-button-primary">Learn More</a>
+                 
+                </div>
+            </div>
+        </section>
+    
+        <!-- Services Section -->
+       <!-- Services Section -->
+       <section id="services" class="services">
+        <h2 class="services-title">Comprehensive Mental Health Support</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <h3 class="service-title">PCOS/PCOD Tracker</h3>
+                <p>A digital health tool empowering women to track, understand, and manage PCOS/PCOD symptoms through personalized monitoring and insights.</p>
+            </div>
+            <div class="service-card">
+                <h3 class="service-title">Sleep Tracking</h3>
+                <p>Understand your sleep patterns, improve rest quality, and wake up feeling refreshed with personalized insights.</p>
+            </div>
+            <div class="service-card">
+                <h3 class="service-title">Meditation & Breathing Exercises</h3>
+                <p>Calm your mind and reduce stress with guided meditation and breathing techniques designed for relaxation and mental clarity.</p>
+            </div>
+        </div>
+    </section>
+    <!-- Previous body content remains the same -->
+
+    <!-- Enhanced Footer -->
+    <footer class="footer">
+        <div class="footer-section">
+            <h4>HerWellness</h4>
+            <p>Empowering mental wellness through compassionate care.</p>
+            <p>© 2024 Harmony Mind. All Rights Reserved.</p>
+        
+        </div>
+        <div class="footer-section">
+            <h4>Quick Access</h4>
+            <div class="footer-links">
+                <li><a href="{{url_for('about_us')}}">About Us</a></li>
+                <li><a href="{{url_for('term')}}">Terms and Conditions</a></li>
+                <li><a href="{{url_for('blog')}}">Wellness Blog</a></li>
+                <li><a href="{{url_for('contact')}}">contact</a></li>
+
+            </div>
+        </div>
+        <div class="footer-section">
+            <h4>Support Resources</h4>
+            <div class="footer-links">
+                <li><a href="#counselling">Women's Counselling</a></li>
+                <li><a href="{{url_for('help')}}">Support Groups</a></li>
+                <li><a href="{{url_for('recommendation')}}">Recommendation</a>
+                <li><a href="#guide">Mental Health Guide</a></li>
+            </div>
+        </div>
+        <div class="footer-section">
+      
+    </footer>
+    <script>
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Optional: Add Intersection Observer for Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+
+    <!-- Previous script remains the same -->
+</body>
+</html>

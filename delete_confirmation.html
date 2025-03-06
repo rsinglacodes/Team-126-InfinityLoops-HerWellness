@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account Confirmation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFB6C1;  /* Light Pink */
+            --secondary-color: #E6E6FA;  /* Lavender */
+            --text-color: #4A4A4A;
+            --background-color: #FFF0F5;  /* Lavender Blush */
+            --danger-color: #a854af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page-centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 40px); /* Account for body padding */
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            margin: 100px auto;
+        }
+
+        .delete-container {
+            background-color: var(--secondary-color);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+            width: 90%;
+            max-width: 600px;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .warning-icon {
+            margin-bottom: 24px;
+            display: inline-block;
+        }
+
+        .warning-icon svg {
+            width: 90px;
+            height: 90px;
+            fill: var(--danger-color);
+            animation: gentle-pulse 3s infinite;
+        }
+
+        @keyframes gentle-pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.03);
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .delete-container h2 {
+            color: var(--danger-color);
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .delete-container p {
+            margin-bottom: 32px;
+            line-height: 1.8;
+            color: var(--text-color);
+            font-size: 17px;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            min-width: 180px;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2);
+        }
+
+        .btn-danger:disabled {
+            background-color: #aaa;
+            transform: none;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background-color: #B71C1C;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(211, 47, 47, 0.3);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--text-color);
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f9f9f9;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .consequences {
+            margin: 32px auto;
+            text-align: left;
+            background-color: rgba(211, 47, 47, 0.05);
+            border-left: 5px solid var(--danger-color);
+            padding: 20px 25px;
+            border-radius: 8px;
+            max-width: 95%;
+        }
+
+        .consequences h3 {
+            font-size: 19px;
+            margin-bottom: 15px;
+            color: var(--danger-color);
+        }
+
+        .consequences ul {
+            list-style-type: none;
+        }
+
+        .consequences li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 28px;
+            line-height: 1.5;
+        }
+
+        .consequences li:before {
+            content: "•";
+            color: var(--danger-color);
+            position: absolute;
+            left: 10px;
+            font-size: 18px;
+        }
+
+        .consequences li:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delete-container > * {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .warning-icon {
+            animation-delay: 0.1s;
+        }
+
+        .delete-container h2 {
+            animation-delay: 0.2s;
+        }
+
+        .delete-container p {
+            animation-delay: 0.3s;
+        }
+
+        .consequences {
+            animation-delay: 0.4s;
+        }
+
+        .confirm-checkbox {
+            animation-delay: 0.5s;
+        }
+
+        .btn-container {
+            animation-delay: 0.6s;
+        }
+
+        /* Modal for confirmation */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: auto;
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 480px;
+            text-align: center;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal h3 {
+            margin-bottom: 24px;
+            color: var(--danger-color);
+            font-size: 22px;
+        }
+
+        .modal p {
+            margin-bottom: 30px;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            color: var(--danger-color);
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        /* Checkbox confirmation */
+        .confirm-checkbox {
+            display: flex;
+            align-items: flex-start;
+            margin: 28px auto;
+            padding: 18px 20px;
+            border: 1px solid var(--primary-color);
+            border-radius: 10px;
+            background-color: white;
+            text-align: left;
+            transition: all 0.3s ease;
+            max-width: 90%;
+        }
+
+        .confirm-checkbox:hover {
+            border-color: var(--danger-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .confirm-checkbox input {
+            margin-right: 15px;
+            margin-top: 3px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--danger-color);
+        }
+
+        .confirm-checkbox label {
+            cursor: pointer;
+            user-select: none;
+            line-height: 1.5;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .delete-container {
+                padding: 40px 20px;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+                gap: 16px;
+            }
+            
+            .modal-buttons .btn {
+                width: 100%;
+            }
+        }
+
+        /* Focus states for accessibility */
+        .btn:focus, input:focus {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-centered">
+        <div class="delete-container">
+            <div class="warning-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+            </div>
+            
+            <h2>Delete Your Account</h2>
+            <p>We're sorry to see you go. Before you proceed, please understand that this action cannot be undone.</p>
+            
+            <div class="consequences">
+                <h3>What happens when you delete your account:</h3>
+                <ul>
+                    <li>All your personal data will be permanently removed</li>
+                    <li>You will lose access to your wellness journey history</li>
+                    <li>Any saved preferences or resources will be deleted</li>
+                    <li>You'll need to create a new account if you wish to return</li>
+                </ul>
+            </div>
+            
+            <div class="confirm-checkbox">
+                <input type="checkbox" id="confirmDelete">
+                <label for="confirmDelete">I understand that this action is permanent and cannot be undone.</label>
+            </div>
+            
+            <div class="btn-container">
+                <a href="#" class="btn btn-secondary">Keep My Account</a>
+                <button id="openDeleteModal" class="btn btn-danger" disabled>Delete My Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for final confirmation -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Final Confirmation</h3>
+            <p>Are you absolutely sure you want to delete your account? This action cannot be reversed.</p>
+            <div class="modal-buttons">
+                <button id="cancelDelete" class="btn btn-secondary">No, Keep My Account</button>
+                <form method="POST" action="/delete" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Yes, Delete Permanently</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Checkbox functionality
+        const confirmCheckbox = document.getElementById('confirmDelete');
+        const deleteBtn = document.getElementById('openDeleteModal');
+        
+        confirmCheckbox.addEventListener('change', function() {
+            deleteBtn.disabled = !this.checked;
+        });
+        
+        // Modal functionality
+        const modal = document.getElementById('deleteModal');
+        const closeModal = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelDelete');
+        
+        deleteBtn.addEventListener('click', function() {
+            if (!this.disabled) {
+                modal.style.display = 'flex';
+                // Small delay to ensure the display change happens before adding active class
+                setTimeout(() => {
+                    modal.classList.add('active');
+                }, 10);
+            }
+        });
+        
+        function closeDeleteModal() {
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 300);
+        }
+        
+        closeModal.addEventListener('click', closeDeleteModal);
+        cancelBtn.addEventListener('click', closeDeleteModal);
+        
+        // Close modal if clicked outside the content
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeDeleteModal();
+            }
+        });
+        
+        // Keyboard accessibility
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.classList.contains('active')) {
+                closeDeleteModal();
+            }
+        });
+        
+        // Improve focus management for modal
+        deleteBtn.addEventListener('click', function() {
+            if (!this.disabled) {
+                setTimeout(() => {
+                    closeModal.focus();
+                }, 100);
+           
+            }
+        });
+
+        // For demo purposes: make "Keep My Account" button work
+        document.querySelector('.btn-secondary').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Account kept! You would normally be redirected to your profile page.');
+        });
+    </script>
+</body>
+</html>

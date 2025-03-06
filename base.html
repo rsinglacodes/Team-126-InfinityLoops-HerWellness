@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmony Mind - Mental Wellness</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FFB6C1;
+            /* Light Pink */
+            --secondary-color: #E6E6FA;
+            /* Lavender */
+            --text-color: #4A4A4A;
+            --background-color: #FFF0F5;
+            /* Lavender Blush */
+        }
+
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-logo {
+            height: 50px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .navbar-links a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-links a:hover::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(255, 182, 193, 0.3);
+        }
+
+        .cta-button:hover {
+            background-color: #FF69B4;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(255, 182, 193, 0.4);
+        }
+
+
+        /* Previous styles remain the same, with slight footer modifications */
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-links a {
+            list-style: none;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-links {
+            list-style: none;
+            /* Removes bullet points */
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            list-style: none;
+            /* Ensures no bullets on list items */
+        }
+
+
+        @media (max-width: 768px) {
+            .footer {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    {% block content %}
+    {% endblock %}
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <img src="../static/images/logo.png" alt="HerWellness Logo" class="navbar-logo">
+        <div class="navbar-links">
+            <a href="{{url_for('home')}}">Home</a>
+            <a href="{{url_for('help')}}">Help And Support</a>
+            <a href="{{url_for('contact')}}">Contact</a>
+            <a href="{{url_for('feedback')}}">Feedback</a>
+            {% if current_user.role == "admin" %}
+            <a href="{{url_for('admin')}}">Dashboard</a>
+            {% endif %}
+
+        </div>
+    </nav>
+
+    <main>
+        {% block main_block %}
+
+
+        
+        {% endblock %}
+    </main>
+
+    <!-- Enhanced Footer -->
+    <footer class="footer">
+        <div class="footer-section">
+            <h4>HerWellness</h4>
+            <p>Empowering mental wellness through compassionate care.</p>
+            <p>© 2024 HerWellness. All Rights Reserved.</p>
+
+        </div>
+        <div class="footer-section">
+            <h4>Quick Access</h4>
+            <div class="footer-links">
+                <li><a href="{{url_for('about_us')}}">About Us</a></li>
+                <li><a href="{{url_for('blog')}}">Wellness Blog</a></li>
+                <li><a href="{{url_for('contact')}}">Contact Us</a></li>
+
+            </div>
+        </div>
+        <div class="footer-section">
+            <h4>Support Resources</h4>
+            <div class="footer-links">
+                <li><a href="#counselling">Women's Counselling</a></li>
+                <li><a href="{{url_for('help')}}">Support Groups</a></li>
+                <li><a href="{{url_for('recommendation')}}">Recommendation</a>
+                <li><a href="#chatbot">Mental Health Guide</a></li>
+            </div>
+        </div>
+
+    </footer>
+  
+    <script>
+        // Smooth Scrolling for Navigation Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Optional: Add Intersection Observer for Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Observe service cards
+        document.querySelectorAll('.service-card').forEach(card => {
+            observer.observe(card);
+        });
+    </script>
+
+    <!-- Previous script remains the same -->
+</body>
+
+</html>

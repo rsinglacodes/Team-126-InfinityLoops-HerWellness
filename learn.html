@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #FFB6C1, #FFF0F5);
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .header {
+        text-align: center;
+        padding: 50px 0;
+        color: #FF69B4;
+    }
+
+    .header h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .header .tagline {
+        max-width: 800px;
+        margin: 0 auto;
+        font-size: 1.2rem;
+        color: #666;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        padding: 50px 0;
+    }
+
+    .feature-card {
+        background-color: white;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-card i {
+        font-size: 3rem;
+        color: #FF69B4;
+        margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+        margin-bottom: 15px;
+        color: #FF1493;
+    }
+
+    .cta-section {
+        background-color: white;
+        text-align: center;
+        padding: 50px 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 50px auto;
+    }
+
+    .cta-section h2 {
+        color: #FF69B4;
+        margin-bottom: 20px;
+    }
+
+    .cta-button {
+        display: inline-block;
+        background-color: #FF69B4;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .cta-button:hover {
+        background-color: #FF1493;
+    }
+
+    .popup {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #FF69B4;
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        z-index: 1000;
+        text-align: center;
+    }
+
+    .popup.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 2rem;
+        }
+
+        .features {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 2rem;
+        color: #FF69B4;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block main_block %}
+<div class="container">
+    <header class="header">
+        <h1>HerWellness</h1>
+        <p class="tagline">Your AI-Powered Mental Health & Well-being Companion</p>
+    </header>
+
+    <section class="features">
+        <div class="feature-card" data-feature="chatbot">
+            <i class="fas fa-comment-dots"></i>
+            <h3>AI Emotional Support</h3>
+            <p>Personalized chatbot providing uplifting messages and stress-relief tips.</p>
+        </div>
+
+        <div class="feature-card" data-feature="mood-tracking">
+            <i class="fas fa-chart-line"></i>
+            <h3>Mood Tracking</h3>
+            <p>Log and understand your emotions with personalized mental health insights.</p>
+        </div>
+
+        <div class="feature-card" data-feature="meditation">
+            <i class="fas fa-wind"></i>
+            <h3>Guided Meditation</h3>
+            <p>Breathing exercises and meditation to manage anxiety and improve focus.</p>
+        </div>
+
+        <div class="feature-card" data-feature="self-care">
+            <i class="fas fa-heart"></i>
+            <h3>Self-Care Recommendations</h3>
+            <p>Personalized routines for journaling, relaxation, and wellness.</p>
+        </div>
+
+        <div class="feature-card" data-feature="sleep">
+            <i class="fas fa-moon"></i>
+            <h3>Sleep & Stress Monitoring</h3>
+            <p>Insights on sleep patterns and effective stress management techniques.</p>
+        </div>
+
+        <div class="feature-card" data-feature="support">
+            <i class="fas fa-life-ring"></i>
+            <h3>Emergency Support</h3>
+            <p>Direct access to crisis helplines and professional mental health resources.</p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>Empower Your Mental Wellness</h2>
+        <p>Join HerWellness and take the first step towards a healthier, happier you.</p>
+        <a href="" class="cta-button" id="early-access">Sign Up</a>
+    </section>
+</div>
+
+<div id="popup" class="popup"></div>
+
+<div id="feature-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="modal-title"></h2>
+        <p id="modal-description"></p>
+    </div>
+</div>
+
+<script>
+    // Feature Modal
+    const featureCards = document.querySelectorAll('.feature-card');
+    const modal = document.getElementById('feature-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalDescription = document.getElementById('modal-description');
+    const closeModal = document.querySelector('.close-modal');
+    const popup = document.getElementById('popup');
+
+    // Feature details
+    const featureDetails = {
+        'chatbot': {
+            title: 'AI Emotional Support',
+            description: 'Our advanced AI chatbot provides personalized emotional support. It offers compassionate responses, stress-relief strategies, and uplifting messages tailored to your unique emotional state.'
+        },
+        'mood-tracking': {
+            title: 'Comprehensive Mood Tracking',
+            description: 'Track your emotional journey with our intuitive mood logging system. Gain insights into your emotional patterns, receive personalized advice, and understand your mental health trends over time.'
+        },
+        'meditation': {
+            title: 'Guided Meditation & Breathing Exercises',
+            description: 'Discover inner peace through our curated meditation and breathing techniques. Designed to reduce anxiety, improve focus, and promote mental clarity, these guided sessions adapt to your personal needs.'
+        },
+        'self-care': {
+            title: 'Personalized Self-Care Recommendations',
+            description: 'Receive tailored self-care routines that fit your lifestyle. From journaling prompts to relaxation activities, we help you develop healthy habits that nurture your mental and emotional well-being.'
+        },
+        'sleep': {
+            title: 'Sleep & Stress Monitoring',
+            description: 'Monitor your sleep patterns and stress levels with our advanced tracking tools. Get actionable insights and recommendations to improve your sleep quality and manage stress effectively.'
+        },
+        'support': {
+            title: 'Emergency Support & Resources',
+            description: 'We prioritize your safety. Access a comprehensive directory of crisis helplines, professional counseling resources, and immediate support options for those challenging moments.'
+        }
+    };
+
+    // Show Feature Modal
+    featureCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const feature = card.getAttribute('data-feature');
+            const details = featureDetails[feature];
+
+            modalTitle.textContent = details.title;
+            modalDescription.textContent = details.description;
+
+            modal.style.display = 'flex';
+        });
+    });
+
+    // Close Modal
+    closeModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Early Access Popup
+    document.getElementById('early-access').addEventListener('click', (e) => {
+        e.preventDefault();
+        showPopup('Early access waitlist opened! We\'ll notify you soon.');
+    });
+
+    // Show popup function
+    function showPopup(message, isError = false) {
+        popup.textContent = message;
+        popup.style.backgroundColor = isError ? '#FF4500' : '#FF69B4';
+        popup.classList.add('show');
+
+        setTimeout(() => {
+            popup.classList.remove('show');
+        }, 3000);
+    }
+</script>
+{% endblock %}

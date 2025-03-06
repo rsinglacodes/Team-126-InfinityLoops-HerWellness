@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    :root {
+        --primary-color: #FFB6C1; /* Light Pink */
+        --secondary-color: #E6E6FA; /* Lavender */
+        --text-color: #4A4A4A;
+        --background-color: #FFF0F5; /* Lavender Blush */
+        --border-radius: 15px;
+        --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        --transition: all 0.3s ease;
+    }
+
+    .feedback-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3rem 1.5rem;
+    }
+
+    .feedback-container {
+        background-color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        padding: 2.5rem;
+        width: 100%;
+        max-width: 550px;
+        transition: var(--transition);
+        margin-top: 50px;
+    }
+
+    .feedback-container:hover {
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+        transform: translateY(-5px);
+    }
+
+    .feedback-title {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: 2rem;
+        font-size: 2.2rem;
+        font-weight: 600;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+
+    .feedback-title::after {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 3px;
+        background-color: var(--primary-color);
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .feedback-subtitle {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--text-color);
+        font-size: 1.1rem;
+        opacity: 0.8;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+        font-weight: 500;
+        font-size: 1rem;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 0.875rem;
+        border: 2px solid #e6e6e6;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        font-family: inherit;
+        font-size: 1rem;
+        transition: var(--transition);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 4px rgba(255, 182, 193, 0.1);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+
+    .form-group select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A4A4A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: var(--transition);
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-top: 1rem;
+        box-shadow: 0 4px 6px rgba(255, 182, 193, 0.3);
+    }
+
+    .submit-btn:hover {
+        background-color: #FF69B4;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(255, 182, 193, 0.4);
+    }
+
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+
+    /* Popup Styles */
+    #successPopup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--primary-color);
+        color: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        max-width: 400px;
+        width: 90%;
+    }
+
+    #successPopup h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    #successPopup p {
+        margin-bottom: 0.5rem;
+        opacity: 0.9;
+    }
+
+    #overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        backdrop-filter: blur(3px);
+    }
+
+    @media screen and (max-width: 600px) {
+        .feedback-container {
+            padding: 1.5rem;
+        }
+
+        .feedback-title {
+            font-size: 1.8rem;
+        }
+        
+        .feedback-subtitle {
+            font-size: 1rem;
+        }
+        
+        .form-group label {
+            font-size: 0.95rem;
+        }
+        
+        .submit-btn {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block main_block %}
+<section class="feedback-section">
+    <div class="feedback-container">
+        <h2 class="feedback-title">Share Your Wellness Journey</h2>
+        <p class="feedback-subtitle">Your thoughts help us grow and better support your mental health needs.</p>
+        
+        <form id="feedbackForm" action="/submit" method="POST">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required placeholder="Enter your name">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="rating">How was your experience?</label>
+                <select id="rating" name="rating" required>
+                    <option value="">Select a rating</option>
+                    <option value="5">Excellent</option>
+                    <option value="4">Very Good</option>
+                    <option value="3">Good</option>
+                    <option value="2">Fair</option>
+                    <option value="1">Needs Improvement</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Your Feedback</label>
+                <textarea id="message" name="message" required placeholder="Share your thoughts and feelings about your experience with us..."></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">Submit Feedback</button>
+        </form>
+    </div>
+</section>
+
+<div id="overlay"></div>
+<div id="successPopup">
+    <h3>Thank You!</h3>
+    <p>Your feedback has been sent successfully.</p>
+    <p>We appreciate your help in improving our services.</p>
+</div>
+
+<script>
+    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // Basic form validation
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const rating = document.getElementById('rating').value;
+        const message = document.getElementById('message').value.trim();
+
+        if (!name || !email || !rating || !message) {
+            alert('Please fill out all fields');
+            return;
+        }
+
+        // Show success popup
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('successPopup').style.display = 'block';
+
+        // Submit the form to backend
+        const form = document.getElementById('feedbackForm');
+        const formData = new FormData(form);
+        
+        fetch('/submit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            // Hide popup after 3 seconds and redirect or reset form
+            setTimeout(() => {
+                document.getElementById('overlay').style.display = 'none';
+                document.getElementById('successPopup').style.display = 'none';
+                
+                // Reset form
+                form.reset();
+                
+                // Optional: redirect to thank you page
+                // window.location.href = '/thank_you';
+            }, 3000);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    });
+</script>
+{% endblock %}

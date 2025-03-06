@@ -1,0 +1,447 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    body {
+        background-color: #f0f4f8;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .sleep-tracker-container {
+        max-width: 500px;
+        margin: 120px auto;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+    }
+
+    .quality-button {
+        transition: all 0.3s ease;
+        transform: scale(1);
+    }
+
+    .quality-button:hover {
+        transform: scale(1.05);
+    }
+
+    .quality-button.selected {
+        border: 2px solid #3b82f6;
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    }
+</style>
+{% endblock %}
+{% block main_block %}
+<div class="sleep-tracker-container">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Sleep Wellness Tracker 💤</h1>
+        <div id="currentDate" class="text-sm text-gray-600"></div>
+    </div>
+
+    <div id="sleepQualitySection" class="mb-5">
+        <label class="block text-lg font-semibold text-gray-700 mb-3">
+            How was your sleep? 😴
+        </label>
+        <div id="sleepQualityOptions" class="grid grid-cols-5 gap-3"></div>
+        <p id="sleepQualityDescription" class="mt-3 text-sm text-gray-600 italic"></p>
+    </div>
+
+    <div class="mb-5">
+        <label class="block text-lg font-semibold text-gray-700 mb-3">
+            Hours of Sleep ⏰
+        </label>
+        <div class="flex items-center justify-between bg-gray-100 rounded-full p-2">
+            <button id="decreaseSleep" class="text-2xl px-3 hover:bg-gray-200 rounded-full">-</button>
+            <span id="sleepHoursDisplay" class="text-xl font-bold">8 hrs</span>
+            <button id="increaseSleep" class="text-2xl px-3 hover:bg-gray-200 rounded-full">+</button>
+        </div>
+    </div>
+
+    <div id="sleepConditionSection" class="mb-5">
+        <label class="block text-lg font-semibold text-gray-700 mb-3">
+            Sleep Condition (Optional) 🩺
+        </label>
+        <div id="sleepConditionOptions" class="grid grid-cols-3 gap-3"></div>
+    </div>
+
+    <button id="saveSleepEntry"
+        class="w-full py-3 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors mb-5">
+        Save Sleep Entry 💾
+    </button>
+
+    <div id="recommendationsSection" class="hidden bg-gray-50 rounded-lg p-4">
+        <h2 class="text-xl font-semibold mb-4">🌈 7-Day Sleep Insights</h2>
+
+        <div id="generalRecommendations" class="mb-4">
+            <h3 class="font-medium text-gray-700">📋 General Recommendations</h3>
+            <ul id="recommendationsList" class="list-disc pl-5 text-sm text-gray-600"></ul>
+        </div>
+
+        <div>
+            <h3 class="font-medium text-gray-700">🧘 Meditation Suggestions</h3>
+            <div id="meditationGrid" class="grid grid-cols-2 gap-3"></div>
+        </div>
+    </div>
+
+    <div id="sleepHistorySection" class="hidden mt-5">
+        <h2 class="text-xl font-semibold mb-3">📊 Sleep History</h2>
+        <canvas id="sleepHistoryChart"></canvas>
+    </div>
+</div>
+
+<script>
+    // Comprehensive Sleep Tracking Data
+    const sleepQualityCategories = {
+        excellent: {
+            score: 5,
+            color: 'bg-green-100',
+            emoji: '☀',
+            description: 'Fully rested, energized, and alert'
+        },
+        good: {
+            score: 4,
+            color: 'bg-blue-100',
+            emoji: '⏰',
+            description: 'Well-rested with minimal fatigue'
+        },
+        average: {
+            score: 3,
+            color: 'bg-yellow-100',
+            emoji: '🌙',
+            description: 'Moderately rested, some tiredness'
+        },
+        poor: {
+            score: 2,
+            color: 'bg-orange-100',
+            emoji: '😴',
+            description: 'Significant fatigue and low energy'
+        },
+        terrible: {
+            score: 1,
+            color: 'bg-red-100',
+            emoji: '🥱',
+            description: 'Extremely tired, struggling to function'
+        }
+    };
+
+    const sleepConditions = {
+        'Insomnia': {
+            symptoms: ['Difficulty falling asleep', 'Frequent wake-ups', 'Early morning awakening'],
+            risks: ['Increased stress', 'Reduced cognitive function', 'Mood disturbances']
+        },
+        'Sleep Apnea': {
+            symptoms: ['Loud snoring', 'Gasping during sleep', 'Daytime sleepiness'],
+            risks: ['Heart problems', 'High blood pressure', 'Metabolic issues']
+        },
+        'Stress-Related': {
+            symptoms: ['Racing thoughts', 'Anxiety', 'Irregular sleep patterns'],
+            risks: ['Mental health challenges', 'Decreased productivity', 'Emotional instability']
+        }
+    };
+
+    const meditationRecommendations = {
+        excellent: [
+            { name: 'Gratitude Meditation 🙏', focus: 'Maintaining positive mindset' },
+            { name: 'Energy Boost Breathing 💨', focus: 'Sustaining high energy levels' }
+        ],
+        good: [
+            { name: 'Mindfulness Practice 🧘', focus: 'Enhancing mental clarity' },
+            { name: 'Body Scan Relaxation 🌿', focus: 'Preventing stress buildup' }
+        ],
+        average: [
+            { name: 'Stress Relief Breathing 😌', focus: 'Reducing daily tension' },
+            { name: 'Grounding Meditation 🌍', focus: 'Improving emotional stability' }
+        ],
+        poor: [
+            { name: 'Healing Visualization 💖', focus: 'Emotional and physical recovery' },
+            { name: 'Compassion Meditation 🤗', focus: 'Self-care and restoration' }
+        ],
+        terrible: [
+            { name: 'Deep Rest Meditation 💤', focus: 'Complete system reset' },
+            { name: 'Restorative Breathing 🌈', focus: 'Rebuilding energy reserves' }
+        ]
+    };
+
+    class SleepTracker {
+        constructor() {
+            this.currentDate = new Date();
+            this.sleepQuality = null;
+            this.sleepCondition = null;
+            this.sleepHours = 8;
+            this.sleepHistory = [];
+
+            this.initializeComponents();
+            this.loadSleepHistory();
+            this.setupEventListeners();
+            this.updateDate();
+            this.renderSleepQualityOptions();
+            this.renderSleepConditionOptions();
+        }
+
+        initializeComponents() {
+            this.dateDisplay = document.getElementById('currentDate');
+            this.sleepQualityOptions = document.getElementById('sleepQualityOptions');
+            this.sleepQualityDescription = document.getElementById('sleepQualityDescription');
+            this.sleepHoursDisplay = document.getElementById('sleepHoursDisplay');
+            this.sleepConditionOptions = document.getElementById('sleepConditionOptions');
+            this.saveSleepEntryButton = document.getElementById('saveSleepEntry');
+            this.recommendationsSection = document.getElementById('recommendationsSection');
+            this.sleepHistorySection = document.getElementById('sleepHistorySection');
+            this.recommendationsList = document.getElementById('recommendationsList');
+            this.meditationGrid = document.getElementById('meditationGrid');
+            this.sleepHistoryChart = document.getElementById('sleepHistoryChart');
+        }
+
+        updateDate() {
+            this.dateDisplay.textContent = this.currentDate.toLocaleDateString();
+
+            setTimeout(() => {
+                this.currentDate = new Date();
+                this.updateDate();
+            }, 60000);
+        }
+
+        renderSleepQualityOptions() {
+            this.sleepQualityOptions.innerHTML = '';
+            Object.keys(sleepQualityCategories).forEach(qualityKey => {
+                const button = document.createElement('button');
+                button.className = `quality-button p-2 rounded-full text-center ${sleepQualityCategories[qualityKey].color}`;
+                button.innerHTML = `
+                        <span class="text-3xl">${sleepQualityCategories[qualityKey].emoji}</span>
+                        <span class="block text-xs mt-1 capitalize">${qualityKey}</span>
+                    `;
+                button.onclick = (event) => this.selectSleepQuality(qualityKey, event);
+                this.sleepQualityOptions.appendChild(button);
+            });
+        }
+
+        renderSleepConditionOptions() {
+            this.sleepConditionOptions.innerHTML = '';
+            Object.keys(sleepConditions).forEach(conditionKey => {
+                const button = document.createElement('button');
+                button.className = 'p-2 rounded-full text-center bg-gray-100 hover:bg-gray-200 transition-colors';
+                button.innerHTML = `
+                        <span class="text-2xl">🩺</span>
+                        <span class="block text-xs mt-1">${conditionKey}</span>
+                    `;
+                button.onclick = (event) => this.selectSleepCondition(conditionKey, event);
+                this.sleepConditionOptions.appendChild(button);
+            });
+        }
+
+        setupEventListeners() {
+            document.getElementById('decreaseSleep').onclick = () => this.adjustSleepHours(-0.5);
+            document.getElementById('increaseSleep').onclick = () => this.adjustSleepHours(0.5);
+            this.saveSleepEntryButton.onclick = () => this.saveSleepEntry();
+        }
+
+        selectSleepQuality(quality, event) {
+            this.sleepQuality = quality;
+            this.sleepQualityDescription.textContent = sleepQualityCategories[quality].description;
+
+            document.querySelectorAll('#sleepQualityOptions .quality-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            event.currentTarget.classList.add('selected');
+        }
+
+        selectSleepCondition(condition, event) {
+            this.sleepCondition = condition;
+
+            document.querySelectorAll('#sleepConditionOptions button').forEach(btn => {
+                btn.classList.remove('bg-purple-100', 'ring-2', 'ring-purple-500');
+                btn.classList.add('bg-gray-100');
+            });
+
+            event.currentTarget.classList.remove('bg-gray-100');
+            event.currentTarget.classList.add('bg-purple-100', 'ring-2', 'ring-purple-500');
+        }
+
+        adjustSleepHours(amount) {
+            this.sleepHours = Math.min(Math.max(this.sleepHours + amount, 0), 12);
+            this.sleepHoursDisplay.textContent = `${this.sleepHours} hrs`;
+        }
+
+        saveSleepEntry() {
+            if (!this.sleepQuality) {
+                alert('Please select your sleep quality before saving! 😴');
+                return;
+            }
+
+            const newEntry = {
+                date: this.currentDate.toISOString().split('T')[0],
+                quality: this.sleepQuality,
+                hours: this.sleepHours,
+                condition: this.sleepCondition || 'None'
+            };
+
+            this.sleepHistory.push(newEntry);
+            this.saveSleepHistoryToLocalStorage();
+            this.displayRecommendations();
+            this.renderSleepHistoryChart();
+        }
+
+        loadSleepHistory() {
+            const savedHistory = localStorage.getItem('advancedSleepHistory');
+            if (savedHistory) {
+                const parsedHistory = JSON.parse(savedHistory);
+                const sevenDaysAgo = new Date();
+                sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+                this.sleepHistory = parsedHistory.filter(entry =>
+                    new Date(entry.date) >= sevenDaysAgo
+                );
+
+                if (this.sleepHistory.length >= 7) {
+                    this.displayRecommendations();
+                    this.renderSleepHistoryChart();
+                }
+            }
+        }
+
+        saveSleepHistoryToLocalStorage() {
+            localStorage.setItem('advancedSleepHistory', JSON.stringify(this.sleepHistory));
+        }
+
+        generateSleepRecommendations() {
+            const scoringMap = {
+                quality: {
+                    excellent: +5,
+                    good: +3,
+                    average: 0,
+                    poor: -3,
+                    terrible: -5
+                },
+                hours: {
+                    '< 5': -4,
+                    '5-6': -2,
+                    '6-7': -1,
+                    '7-9': +3,
+                    '9-10': +2,
+                    '> 10': -1
+                },
+                condition: {
+                    'None': 0,
+                    'Insomnia': -4,
+                    'Sleep Apnea': -5,
+                    'Stress-Related': -3
+                }
+            };
+
+            const qualityScore = scoringMap.quality[this.sleepQuality] || 0;
+
+            const hoursCategory = this.sleepHours < 5 ? '< 5' :
+                this.sleepHours < 6 ? '5-6' :
+                    this.sleepHours < 7 ? '6-7' :
+                        this.sleepHours < 9 ? '7-9' :
+                            this.sleepHours < 10 ? '9-10' : '> 10';
+            const hoursScore = scoringMap.hours[hoursCategory] || 0;
+
+            const conditionScore = scoringMap.condition[this.sleepCondition || 'None'] || 0;
+
+            const totalScore = qualityScore + hoursScore + conditionScore;
+
+            const recommendationCategories = {
+                'high-risk': {
+                    color: '#FFB6C1',
+                    recommendations: [
+                        '🚨 Urgent sleep health intervention needed',
+                        '👩‍⚕ Immediate professional consultation recommended',
+                        '⏰ Comprehensive sleep schedule restructuring',
+                        '🩺 Comprehensive health and sleep assessment'
+                    ],
+                    meditation: meditationRecommendations.terrible
+                },
+                'moderate-risk': {
+                    color: '#E6E6FA',
+                    recommendations: [
+                        '🕰 Improve sleep consistency',
+                        '📅 Develop a structured bedtime routine',
+                        '📵 Reduce evening screen time',
+                        '🏠 Optimize sleep environment'
+                    ],
+                    meditation: meditationRecommendations.poor
+                },
+                'low-risk': {
+                    color: '#FFF0F5',
+                    recommendations: [
+                        '🌟 Maintain your current sleep routine',
+                        '💪 Continue prioritizing sleep quality',
+                        '🧘 Explore advanced relaxation techniques',
+                        '🌈 Minor optimizations for peak performance'
+                    ],
+                    meditation: meditationRecommendations.average
+                }
+            };
+
+            let riskCategory = 'low-risk';
+            if (totalScore <= -5) riskCategory = 'high-risk';
+            else if (totalScore <= 0) riskCategory = 'moderate-risk';
+
+            const { recommendations, meditation, color } = recommendationCategories[riskCategory];
+
+            this.recommendationsSection.style.backgroundColor = color;
+
+            return {
+                generalRecommendations: recommendations,
+                meditationRecommendations: meditation
+            };
+        }
+
+        displayRecommendations() {
+            const { generalRecommendations, meditationRecommendations: meditations } = this.generateSleepRecommendations();
+
+            this.recommendationsList.innerHTML = generalRecommendations
+                .map(rec => `<li>${rec}</li>`).join('');
+
+            this.meditationGrid.innerHTML = meditations
+                .map(meditation => `
+                        <div class="bg-white p-3 rounded-lg shadow-md">
+                            <h4 class="font-semibold text-sm">${meditation.name}</h4>
+                            <p class="text-xs text-gray-500">${meditation.focus}</p>
+                        </div>
+                    `).join('');
+
+            this.recommendationsSection.classList.remove('hidden');
+        }
+
+        renderSleepHistoryChart() {
+            this.sleepHistorySection.classList.remove('hidden');
+
+            new Chart(this.sleepHistoryChart, {
+                type: 'line',
+                data: {
+                    labels: this.sleepHistory.map(entry => entry.date),
+                    datasets: [{
+                        label: 'Sleep Hours 💤',
+                        data: this.sleepHistory.map(entry => entry.hours),
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 12,
+                            title: {
+                                display: true,
+                                text: 'Hours of Sleep'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        new SleepTracker();
+    });
+</script>
+{% endblock %}

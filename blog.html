@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Wellness - Mental Health Insights</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #FFB6C1;
+            --primary-color-dark: #FF69B4;
+        }
+
+        body {
+            background-color: #FFF0F5;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .blog-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 182, 193, 0.3);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--primary-color), #FF69B4);
+        }
+
+        .footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4rem 5%;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-links a {
+            list-style: none;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .footer-links {
+            list-style: none;
+            /* Removes bullet points */
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            list-style: none;
+            /* Ensures no bullets on list items */
+        }
+
+
+        @media (max-width: 768px) {
+            .footer {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md fixed top-0 left-0 right-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-pink-500">HerWellness</div>
+            <div class="space-x-4">
+                <a href="{{url_for('home')}}">Home</a>
+                <a href="{{url_for('help')}}">Help And Support</a>
+                <a href="{{url_for('contact')}}">Contact</a>
+                <a href="{{url_for('feedback')}}">Feedback</a>
+                {% if current_user.role == "admin" %}
+                <a href="{{url_for('admin')}}">Dashboard</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="gradient-bg text-white text-center py-24 mt-16">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl font-bold mb-4">Nurturing Mental Wellness</h1>
+            <p class="text-xl max-w-2xl mx-auto">Empowering insights for holistic mental health and well-being</p>
+        </div>
+    </header>
+
+    <!-- Blog Posts Section -->
+    <section id="blogs" class="container mx-auto px-4 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12 text-pink-600">Mental Health Insights</h2>
+        <div id="blog-container" class="grid md:grid-cols-3 gap-8">
+            <!-- Blog posts will be dynamically inserted here -->
+        </div>
+    </section>
+
+    <!-- Mental Health Resources -->
+    <section id="resources" class="bg-white py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12 text-pink-600">Wellness Resources</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-pink-50 p-6 rounded-lg text-center">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-pink-500" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-4">Self-Care Guides</h3>
+                    <p>Practical strategies for mental well-being</p>
+                </div>
+                <div class="bg-pink-50 p-6 rounded-lg text-center">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-pink-500" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-4">Support Communities</h3>
+                    <p>Connect with supportive networks</p>
+                </div>
+                <div class="bg-pink-50 p-6 rounded-lg text-center">
+                    <svg class="w-16 h-16 mx-auto mb-4 text-pink-500" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <h3 class="text-xl font-semibold mb-4">Educational Resources</h3>
+                    <p>Learn about mental health</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Signup -->
+    <section class="bg-pink-100 py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-8 text-pink-600">Stay Connected</h2>
+            <form id="newsletter-form" class="max-w-md mx-auto flex">
+                <input type="email" placeholder="Enter your email" required
+                    class="flex-grow px-4 py-2 border rounded-l-lg">
+                <button type="submit" class="bg-pink-500 text-white px-6 py-2 rounded-r-lg hover:bg-pink-600">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Blog Post Modal -->
+    <div id="blog-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg max-w-2xl w-full mx-4 p-8 relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-gray-600 hover:text-pink-500">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <h2 id="modal-title" class="text-2xl font-bold mb-4 text-pink-600"></h2>
+            <p id="modal-content" class="text-gray-700 leading-relaxed"></p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-section">
+            <h4>HerWellness</h4>
+            <p>Empowering mental wellness through compassionate care.</p>
+            <p>© 2024 HerWellness. All Rights Reserved.</p>
+
+        </div>
+        <div class="footer-section">
+            <h4>Quick Access</h4>
+            <div class="footer-links">
+                <li><a href="{{url_for('about_us')}}">About Us</a></li>
+                <li><a href="{{url_for('blog')}}">Wellness Blog</a></li>
+                <li><a href="{{url_for('contact')}}">Contact Us</a></li>
+
+            </div>
+        </div>
+        <div class="footer-section">
+            <h4>Support Resources</h4>
+            <div class="footer-links">
+                <li><a href="#counselling">Women's Counselling</a></li>
+                <li><a href="{{url_for('help')}}">Support Groups</a></li>
+                <li><a href="{{url_for('recommendation')}}">Recommendation</a>
+                <li><a href="#chatbot">Mental Health Guide</a></li>
+            </div>
+        </div>
+
+    </footer>
+
+    <script>
+        // Comprehensive Mental Health Blog Posts
+        const blogPosts = [
+            {
+                title: "Understanding Anxiety: Coping Strategies",
+                summary: "Practical techniques to manage and reduce anxiety in daily life.",
+                content: "Anxiety is a common mental health challenge affecting millions worldwide. This comprehensive guide explores evidence-based strategies to help you understand and manage anxiety effectively. Key techniques include mindfulness meditation, cognitive restructuring, breathing exercises, and developing a supportive self-care routine. Learn how to recognize anxiety triggers, implement practical coping mechanisms, and build emotional resilience."
+            },
+            {
+                title: "The Power of Sleep for Mental Health",
+                summary: "Exploring the critical connection between sleep and psychological well-being.",
+                content: "Quality sleep is fundamental to mental health. This in-depth article reveals how sleep impacts mood, cognitive function, and emotional regulation. Discover the scientific links between sleep deprivation and mental health conditions like depression and anxiety. Practical tips include establishing a consistent sleep schedule, creating a relaxing bedtime routine, managing screen time, and understanding the importance of REM sleep for emotional processing."
+            },
+            {
+                title: "Building Emotional Resilience",
+                summary: "Strategies to develop mental strength and adaptability.",
+                content: "Emotional resilience is the ability to bounce back from challenges and stress. This guide provides comprehensive insights into developing mental toughness. Key strategies include practicing self-compassion, reframing negative experiences, developing a growth mindset, maintaining strong social connections, and learning stress management techniques. Understand how resilience can be cultivated through mindful practices, emotional intelligence, and consistent personal development."
+            },
+            {
+                title: "Mindfulness and Mental Wellness",
+                summary: "Exploring mindfulness techniques for holistic mental health.",
+                content: "Mindfulness is a powerful tool for managing mental health and reducing stress. This comprehensive exploration covers various mindfulness practices, including meditation, breathing exercises, and present-moment awareness. Learn how mindfulness can help reduce symptoms of anxiety and depression, improve emotional regulation, and enhance overall well-being. Practical techniques and scientific research provide a holistic approach to incorporating mindfulness into daily life."
+            },
+            {
+                title: "Nutrition and Mental Health",
+                summary: "Understanding the diet-mental health connection.",
+                content: "Your diet plays a crucial role in mental health. This article explores the intricate relationship between nutrition and psychological well-being. Discover how certain foods can impact mood, brain function, and emotional stability. Learn about nutrients that support mental health, the gut-brain connection, and practical dietary strategies to enhance mental wellness. Includes expert recommendations for a brain-healthy diet."
+            },
+            {
+                title: "Managing Stress in Modern Life",
+                summary: "Effective strategies for stress reduction and management.",
+                content: "Modern life presents numerous stress challenges. This comprehensive guide offers practical techniques for managing and reducing stress. Topics include identifying stress triggers, implementing time management strategies, practicing relaxation techniques, maintaining work-life balance, and developing healthy coping mechanisms. Learn how to build a personalized stress management toolkit that promotes mental resilience and overall well-being."
+            }
+        ];
+
+        // Render Blog Posts
+        function renderBlogPosts() {
+            const blogContainer = document.getElementById('blog-container');
+            blogContainer.innerHTML = blogPosts.map((post, index) => `
+                <div class="blog-card bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-2 text-pink-600">${post.title}</h3>
+                        <p class="text-gray-600 mb-4">${post.summary}</p>
+                        <button 
+                            onclick="openBlogModal(${index})" 
+                            class="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600"
+                        >
+                            Read More
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Open Blog Post Modal
+        function openBlogModal(index) {
+            const modal = document.getElementById('blog-modal');
+            const title = document.getElementById('modal-title');
+            const content = document.getElementById('modal-content');
+
+            title.textContent = blogPosts[index].title;
+            content.textContent = blogPosts[index].content;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        // Close Modal
+        document.getElementById('close-modal').addEventListener('click', () => {
+            const modal = document.getElementById('blog-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        });
+
+        // Newsletter Signup
+        document.getElementById('newsletter-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for subscribing to Mindful Wellness!');
+            e.target.reset();
+        });
+
+        // Initial Render
+        renderBlogPosts();
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('blog-modal');
+            if (event.target === modal) {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

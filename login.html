@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Wellness - Login</title>
+    <style>
+        :root {
+            --primary-color: #FFB6C1;  /* Light Pink */
+            --secondary-color: #E6E6FA;  /* Lavender */
+            --text-color: #4A4A4A;
+            --background-color: #FFF0F5;  /* Lavender Blush */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+        }
+
+        .login-container {
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+        }
+
+        .login-container h2 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: white;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(255, 182, 193, 0.5);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #FF89A7;  /* Slightly darker pink */
+        }
+
+        .error-message {
+            color: #DC143C;  /* Crimson for error messages */
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .signup-link a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+
+        .forgot-password a {
+            color: var(--text-color);
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Welcome Back to HerWellness</h2>
+        <form id="loginForm" method="POST" action="{{url_for('login')}}">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+                <div id="emailError" class="error-message">Please enter a valid email address</div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <div id="passwordError" class="error-message">Password must be at least 8 characters long</div>
+            </div>
+
+            <div class="forgot-password">
+                <a href="#">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="submit-btn">Log In</button>
+
+            <div class="signup-link">
+                <p>Don't have an account? <a href="{{url_for('register')}}">Sign Up</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // Email validation
+            const email = document.getElementById('email');
+            const emailError = document.getElementById('emailError');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email.value)) {
+                emailError.style.display = 'block';
+                isValid = false;
+            } else {
+                emailError.style.display = 'none';
+            }
+
+            // Password validation
+            const password = document.getElementById('password');
+            const passwordError = document.getElementById('passwordError');
+            if (password.value.length < 8) {
+                passwordError.style.display = 'block';
+                isValid = false;
+            } else {
+                passwordError.style.display = 'none';
+            }
+
+            // Prevent form submission if validation fails
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+        // Optional: Show/hide password functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('password');
+            const togglePassword = document.createElement('span');
+            togglePassword.innerHTML = '👁️';
+            togglePassword.style.position = 'absolute';
+            togglePassword.style.right = '10px';
+            togglePassword.style.cursor = 'pointer';
+            togglePassword.style.userSelect = 'none';
+
+            const passwordContainer = passwordInput.parentNode;
+            passwordContainer.style.position = 'relative';
+            passwordContainer.insertBefore(togglePassword, passwordInput.nextSibling);
+
+            togglePassword.addEventListener('click', function() {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                } else {
+                    passwordInput.type = 'password';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

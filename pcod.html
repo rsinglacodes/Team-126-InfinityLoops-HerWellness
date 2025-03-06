@@ -1,0 +1,768 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+    body {
+        font-family: 'Montserrat', sans-serif;
+        /* Removed display:flex to prevent conflicts with base template */
+        background: linear-gradient(135deg, #f8bbd0 0%, #e1bee7 50%, #bbdefb 100%);
+        max-height: 100vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .tracker-container {
+        max-width: 700px; /* Reduced from 900px */
+        width: 70%; /* Reduced from 80% */
+        background: rgba(255, 255, 255, 0.97);
+        border-radius: 24px; /* Reduced from 28px */
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        transition: all 0.4s ease;
+        overflow: hidden;
+        padding-bottom: 15px; /* Reduced from 20px */
+        max-height: 800px; /* Reduced from 1000px */
+        margin: 80px auto; /* Reduced from 100px */
+    }
+
+    /* Rest of your styles remain unchanged */
+    .header {
+        background: linear-gradient(135deg, #ec407a 0%, #ab47bc 100%);
+        padding: 10px 8px; /* Reduced from 12px 10px */
+        color: white;
+        text-align: center;
+        border-radius: 24px 24px 0 0; /* Reduced from 28px */
+        margin-bottom: 8px; /* Reduced from 10px */
+        box-shadow: 0 4px 15px rgba(171, 71, 188, 0.3);
+    }
+
+    .progress-container {
+        width: 80%;
+        margin: 0 auto 25px auto; /* Reduced from 30px */
+        background: rgba(236, 64, 122, 0.15);
+        height: 8px; /* Reduced from 10px */
+        border-radius: 10px; /* Reduced from 12px */
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 8px; /* Reduced from 10px */
+        background: linear-gradient(to right, #ec407a 0%, #ab47bc 100%);
+        transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+        border-radius: 10px; /* Reduced from 12px */
+        box-shadow: 0 2px 5px rgba(236, 64, 122, 0.3);
+    }
+
+    .content-section {
+        padding: 20px 35px; /* Reduced from 25px 40px */
+        max-width: 650px; /* Reduced from 780px */
+        margin: 0 auto;
+    }
+
+    .option-card {
+        background: white;
+        border-radius: 15px; /* Reduced from 18px */
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 12px; /* Reduced from 14px */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .option-card:hover {
+        transform: translateY(-2px); /* Reduced from -3px */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08); /* Reduced from 8px 20px */
+    }
+
+    .option-card input:checked + .card-content {
+        border-color: #ec407a;
+        background: rgba(236, 64, 122, 0.05);
+    }
+
+    .option-card input:checked + .card-content:after {
+        content: "✓";
+        position: absolute;
+        right: 18px; /* Reduced from 20px */
+        top: 40%;
+        transform: translateY(-50%);
+        color: #ec407a;
+        font-size: 20px; /* Reduced from 22px */
+        font-weight: bold;
+    }
+
+    .card-content {
+        padding: 15px 20px; /* Reduced from 18px 24px */
+        border: 2px solid transparent;
+        border-radius: 15px; /* Reduced from 18px */
+        display: flex;
+        align-items: center;
+    }
+    
+    .question-enter {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    .question-enter-active {
+        opacity: 1;
+        transform: translateY(0);
+        transition: opacity 0.5s, transform 0.5s;
+    }
+
+    .question-exit {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .question-exit-active {
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.5s, transform 0.5s;
+    }
+
+    .btn {
+        border-radius: 50px;
+        padding: 10px 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #ec407a 0%, #ab47bc 100%);
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(236, 64, 122, 0.3);
+    }
+
+    .btn-secondary {
+        background: #f5f5f5;
+        color: #757575;
+        border: none;
+    }
+
+    .btn-secondary:hover {
+        background: #eeeeee;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
+    }
+
+    .result-card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        animation: slideUp 0.6s ease-out;
+    }
+
+    .risk-indicator {
+        height: 10px;
+        width: 100%;
+        display: flex;
+    }
+
+    .risk-indicator div {
+        height: 100%;
+        flex: 1;
+    }
+
+    .risk-low {
+        background-color: #81c784;
+    }
+
+    .risk-moderate {
+        background-color: #fff176;
+    }
+
+    .risk-high {
+        background-color: #e57373;
+    }
+
+    .recommendation-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .recommendation-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .recommendation-item i {
+        margin-right: 14px;
+        color: #ec407a;
+        margin-top: 3px;
+        font-size: 18px;
+    }
+
+    .meditation-link {
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        border-radius: 18px;
+        transition: all 0.4s ease;
+    }
+
+    .meditation-link:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(135deg, #ec407a 0%, #ab47bc 100%);
+        transition: width 0.3s ease;
+        z-index: -1;
+        border-radius: 18px;
+    }
+
+    .meditation-link:hover:before {
+        width: 100%;
+    }
+
+    .meditation-link:hover {
+        color: white;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(236, 64, 122, 0.2);
+    }
+
+    .icon-container {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba(236, 64, 122, 0.12);
+        margin-bottom: 20px;
+        font-size: 22px;
+        color: #ec407a;
+        transition: all 0.3s ease;
+    }
+
+    .animate-pulse {
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(236, 64, 122, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 20px rgba(236, 64, 122, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(236, 64, 122, 0);
+        }
+    }
+
+    /* Added shake animation */
+    .animate-shake {
+        animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
+    }
+
+    /* New styling for questions and results */
+    .question-section h2 {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+        color: #424242;
+        line-height: 1.4;
+        position: relative;
+        padding-left: 16px;
+        border-left: 4px solid #ec407a;
+    }
+
+    .option-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(236, 64, 122, 0.1);
+        border-radius: 50%;
+        margin-right: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .option-card:hover {
+        background-color: rgba(236, 64, 122, 0.1); /* Change background on hover */
+    }
+    
+    .option-card input:checked + .card-content {
+        background: rgba(236, 64, 122, 0.2); /* Change background when selected */
+        border-color: #ec407a; /* Keep the border color */
+    }
+
+    .result-section-card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .result-section-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .section-header i {
+        font-size: 20px;
+        color: #ec407a;
+        margin-right: 12px;
+    }
+
+    .meditation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
+    /* Continue with the rest of the styles but keep them unchanged */
+</style>
+{% endblock %}
+
+{% block main_block %}
+<!-- Centered container wrapper -->
+<div class="flex justify-center items-center">
+    <div class="tracker-container">
+        <div class="header">
+            <h1 class="text-xl md:text-3xl font-bold mb-2">PCOS/PCOD Wellness Tracker</h1>
+            <p class="text-base md:text-lg opacity-90">Your personalized health companion</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+        </div>
+
+        <div class="content-section">
+            <!-- Rest of your content remains unchanged -->
+            <div id="welcomeSection" class="text-center">
+                <div class="mx-auto w-28 h-28 bg-pink-100 rounded-full flex items-center justify-center mb-6">
+                    <i class="fas fa-heartbeat text-4xl text-pink-500"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-5">Personalized Wellness Assessment</h2>
+                <p class="text-gray-600 mb-8 max-w-md mx-auto text-base">Track your symptoms and receive personalized wellness recommendations to help manage your PCOS/PCOD journey.</p>
+                <button id="startBtn" class="btn btn-primary animate-pulse">
+                    <i class="fas fa-play-circle mr-3"></i>Start Assessment
+                </button>
+            </div>
+
+           
+        <div id="questionContainer" class="hidden">
+            <div id="questionNumber" class="text-sm font-medium text-pink-600 mb-3"></div>
+            <div id="questions" class="space-y-6"></div>
+            <div class="flex justify-between mt-8">
+                <button id="prevBtn" class="btn btn-secondary hidden">
+                    <i class="fas fa-arrow-left mr-2"></i>Previous
+                </button>
+                <button id="nextBtn" class="btn btn-primary">
+                    Next<i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="resultSection" class="hidden">
+            <div class="result-card">
+                <div class="risk-indicator">
+                    <div class="risk-low"></div>
+                    <div class="risk-moderate"></div>
+                    <div class="risk-high"></div>
+                </div>
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Your Personalized Report</h2>
+                    <div id="resultContent" class="space-y-6"></div>
+                    
+                    <div id="meditationRecommendation" class="mt-8 hidden">
+                        <div class="result-section-card">
+                            <div class="section-header">
+                                <i class="fas fa-spa"></i>
+                                <h3 class="text-lg font-bold text-gray-800">Meditation Recommendations</h3>
+                            </div>
+                            <p class="text-gray-600 mb-3">These meditation practices are tailored to your current wellness needs.</p>
+                            <div id="meditationLinks" class="meditation-grid"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <button id="restartBtn" class="btn btn-primary">
+                            <i class="fas fa-redo mr-3"></i>Retake Assessment
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- The script section remains unchanged -->
+<script>
+    const questions = [
+        {
+            text: "How would you rate your stress levels?",
+            type: "scale",
+            options: ["Very Low", "Low", "Moderate", "High", "Very High"],
+            scoring: [2, 1, 0, -1, -2],
+            icons: ["fa-smile", "fa-smile-beam", "fa-meh", "fa-frown", "fa-tired"]
+        },
+        {
+            text: "How many hours of sleep do you get per night?",
+            type: "scale",
+            options: ["Less than 4", "4-6", "6-8", "8-10", "More than 10"],
+            scoring: [-2, -1, 1, 2, 2],
+            icons: ["fa-moon opacity-30", "fa-moon opacity-50", "fa-moon", "fa-moon", "fa-moon"]
+        },
+        {
+            text: "How often do you experience mood swings?",
+            type: "scale",
+            options: ["Rarely", "Sometimes", "Often", "Very Often", "Constantly"],
+            scoring: [2, 1, -1, -2, -2],
+            icons: ["fa-face-laugh", "fa-face-smile", "fa-face-meh", "fa-face-frown", "fa-face-angry"]
+        },
+        {
+            text: "Do you experience irregular menstrual cycles?",
+            type: "scale",
+            options: ["Never", "Rarely", "Sometimes", "Often", "Always"],
+            scoring: [2, 1, 0, -2, -3],
+            icons: ["fa-calendar-check", "fa-calendar", "fa-calendar-days", "fa-calendar-xmark", "fa-calendar-xmark"]
+        },
+        {
+            text: "How would you rate your diet?",
+            type: "scale",
+            options: ["Very Unhealthy", "Somewhat Unhealthy", "Balanced", "Healthy", "Very Healthy"],
+            scoring: [-2, -1, 0, 1, 2],
+            icons: ["fa-burger", "fa-pizza-slice", "fa-utensils", "fa-apple-whole", "fa-carrot"]
+        },
+        {
+            text: "How often do you exercise?",
+            type: "scale",
+            options: ["Never", "1-2 times/week", "3-4 times/week", "5-6 times/week", "Daily"],
+            scoring: [-2, -1, 1, 2, 2],
+            icons: ["fa-person-circle-xmark", "fa-person-walking", "fa-person-running", "fa-person-biking", "fa-dumbbell"]
+        }
+    ];
+
+    // The rest of the JavaScript code remains unchanged
+    const meditationRecommendations = {
+        "Low Risk": {
+            links: [
+                { name: "Preventive Wellness Meditation", url: "/meditation/preventive-wellness", icon: "fa-lotus-position" },
+                { name: "Balanced Lifestyle Techniques", url: "/meditation/balanced-lifestyle", icon: "fa-yin-yang" }
+            ]
+        },
+        "Moderate Risk": {
+            links: [
+                { name: "Holistic Health Meditation", url: "/meditation/holistic-health", icon: "fa-spa" },
+                { name: "Stress Management Program", url: "/meditation/stress-management", icon: "fa-cloud" },
+                { name: "Hormonal Balance Meditation", url: "/meditation/hormonal-balance", icon: "fa-balance-scale" }
+            ]
+        },
+        "High Risk": {
+            links: [
+                { name: "Advanced Wellness Meditation", url: "/meditation/advanced-wellness", icon: "fa-om" },
+                { name: "Comprehensive Health Meditation", url: "/meditation/comprehensive-health", icon: "fa-heart-pulse" },
+                { name: "Targeted Healing Program", url: "/meditation/targeted-healing", icon: "fa-hand-holding-heart" },
+                { name: "Emotional Wellness Deep Dive", url: "/meditation/emotional-wellness", icon: "fa-brain" }
+            ]
+        }
+    };
+
+    const wellnessRecommendations = {
+        "Low Risk": {
+            color: "#81c784",
+            icon: "fa-check-circle",
+            tips: [
+                "Maintain your current healthy lifestyle",
+                "Continue preventive health practices",
+                "Schedule regular health check-ups",
+                "Monitor any changes in your cycle or symptoms"
+            ]
+        },
+        "Moderate Risk": {
+            color: "#ffee58",
+            icon: "fa-exclamation-circle",
+            tips: [
+                "Focus on lifestyle modifications to improve overall health",
+                "Implement stress management and hormonal balance techniques",
+                "Consider consulting an endocrinologist or gynecologist",
+                "Track your symptoms with a dedicated health journal"
+            ]
+        },
+        "High Risk": {
+            color: "#e57373",
+            icon: "fa-triangle-exclamation",
+            tips: [
+                "Consult a healthcare professional for comprehensive PCOS/PCOD management",
+                "Consider hormone level testing and detailed medical evaluation",
+                "Develop a targeted lifestyle and dietary intervention plan",
+                "Explore potential medication and treatment options with your doctor"
+            ]
+        }
+    };
+
+    let currentQuestion = 0;
+    const questionContainer = document.getElementById('questions');
+    const questionNumberDisplay = document.getElementById('questionNumber');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const startBtn = document.getElementById('startBtn');
+    const welcomeSection = document.getElementById('welcomeSection');
+    const questionnaireSection = document.getElementById('questionContainer');
+    const resultSection = document.getElementById('resultSection');
+    const resultContent = document.getElementById('resultContent');
+    const progressBar = document.getElementById('progressBar');
+    const restartBtn = document.getElementById('restartBtn');
+    const meditationRecommendationSection = document.getElementById('meditationRecommendation');
+    const meditationLinksContainer = document.getElementById('meditationLinks');
+
+    const userAnswers = {};
+
+    function renderQuestion(question) {
+        questionNumberDisplay.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+        
+        const questionEl = document.createElement('div');
+        questionEl.className = 'question-section transition-opacity duration-500 opacity-0';
+        
+        questionEl.innerHTML = 
+            `<h2 class="text-lg font-semibold text-gray-800 mb-4">${question.text}</h2>
+            <div class="grid grid-cols-1 gap-4">
+                ${question.options.map((option, index) => 
+                    `<div class="option-card">
+                        <input type="radio" name="question" id="option-${index}" value="${option}" 
+                            data-score="${question.scoring[index]}" class="sr-only" 
+                            ${userAnswers[currentQuestion] === option ? 'checked' : ''}>
+                        <label for="option-${index}" class="block cursor-pointer">
+                            <div class="card-content">
+                                <div class="option-icon">
+                                    <i class="fas ${question.icons[index]} text-pink-500"></i>
+                                </div>
+                                <span class="text-base">${option}</span>
+                            </div>
+                        </label>
+                    </div>`
+                ).join('')}
+            </div>`;
+        
+        questionContainer.innerHTML = '';
+        questionContainer.appendChild(questionEl);
+        
+        // Trigger fade in animation
+        setTimeout(() => {
+            questionEl.classList.replace('opacity-0', 'opacity-100');
+        }, 10);
+        
+        updateNavigationButtons();
+        updateProgressBar();
+    }
+
+    function updateNavigationButtons() {
+        prevBtn.classList.toggle('hidden', currentQuestion === 0);
+        nextBtn.innerHTML = currentQuestion === questions.length - 1 ? 
+            'Submit<i class="fas fa-check-circle ml-3"></i>' : 
+            'Next<i class="fas fa-arrow-right ml-3"></i>';
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentQuestion + 1) / questions.length) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    startBtn.addEventListener('click', () => {
+        welcomeSection.classList.add('hidden');
+        questionnaireSection.classList.remove('hidden');
+        renderQuestion(questions[currentQuestion]);
+    });
+
+    nextBtn.addEventListener('click', () => {
+        const selectedOption = document.querySelector('input[name="question"]:checked');
+
+        if (!selectedOption) {
+            // Add shake animation to the question container to indicate needed selection
+            questionContainer.classList.add('animate-shake');
+            setTimeout(() => {
+                questionContainer.classList.remove('animate-shake');
+            }, 500);
+            return;
+        }
+
+        userAnswers[currentQuestion] = selectedOption.value;
+
+        // Fade out animation
+        const currentQuestionSection = document.querySelector('.question-section');
+        currentQuestionSection.classList.replace('opacity-100', 'opacity-0');
+        
+        setTimeout(() => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                renderQuestion(questions[currentQuestion]);
+            } else {
+                generateResult();
+            }
+        }, 300);
+    });
+
+    prevBtn.addEventListener('click', () => {
+        // Fade out animation
+        const currentQuestionSection = document.querySelector('.question-section');
+        currentQuestionSection.classList.replace('opacity-100', 'opacity-0');
+        
+        setTimeout(() => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion(questions[currentQuestion]);
+            }
+        }, 300);
+    });
+
+    restartBtn.addEventListener('click', () => {
+        currentQuestion = 0;
+        Object.keys(userAnswers).forEach(key => delete userAnswers[key]);
+        resultSection.classList.add('hidden');
+        welcomeSection.classList.remove('hidden');
+        progressBar.style.width = '0%';
+    });
+
+    function generateResult() {
+        questionnaireSection.classList.add('hidden');
+        resultSection.classList.remove('hidden');
+
+        // Calculate total score
+        const totalScore = Object.keys(userAnswers).reduce((score, questionIndex) => {
+            const question = questions[questionIndex];
+            const answerIndex = question.options.indexOf(userAnswers[questionIndex]);
+            return score + question.scoring[answerIndex];
+        }, 0);
+
+        // Determine risk category based on total score
+        let riskCategory = 'Low Risk';
+        let riskLevel = 'low';
+        let activeRiskElement = document.querySelector('.risk-low');
+
+        if (totalScore <= -4) {
+            riskCategory = 'High Risk';
+            riskLevel = 'high';
+            activeRiskElement = document.querySelector('.risk-high');
+        } else if (totalScore <= 0) {
+            riskCategory = 'Moderate Risk';
+            riskLevel = 'moderate';
+            activeRiskElement = document.querySelector('.risk-moderate');
+        }
+
+        // Highlight the active risk level
+        document.querySelectorAll('.risk-indicator div').forEach(el => {
+            el.style.opacity = '0.3';
+        });
+        activeRiskElement.style.opacity = '1';
+
+        // Get recommendations for this risk category
+        const recommendations = wellnessRecommendations[riskCategory].tips;
+        const categoryColor = wellnessRecommendations[riskCategory].color;
+        const categoryIcon = wellnessRecommendations[riskCategory].icon;
+
+        const resultHTML = `
+            <div class="space-y-6">
+                <div class="result-section-card bg-${riskLevel === 'low' ? 'green' : riskLevel === 'moderate' ? 'yellow' : 'red'}-50 p-4 rounded-xl border-2 border-${riskLevel === 'low' ? 'green' : riskLevel === 'moderate' ? 'yellow' : 'red'}-200">
+                    <div class="flex flex-col md:flex-row items-center text-center md:text-left">
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-3 md:mb-0 md:mr-5" style="background-color: ${categoryColor}20; color: ${categoryColor};">
+                            <i class="fas ${categoryIcon} text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg text-gray-800 mb-1">PCOS/PCOD Risk Assessment</h3>
+                            <p class="text-gray-700 flex flex-col md:flex-row items-center">
+                                <span class="font-medium text-base mb-1 md:mb-0" style="color: ${categoryColor};">${riskCategory}</span>
+                                <span class="mx-2 text-gray-400 hidden md:inline-block">|</span>
+                                <span>Score: ${totalScore}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="result-section-card">
+                    <div class="section-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3 class="font-bold text-lg text-gray-800">Personalized Recommendations</h3>
+                    </div>
+                    <div class="space-y-3 text-gray-700">
+                        ${recommendations.map(rec => `
+                            <div class="recommendation-item">
+                                <i class="fas fa-check"></i>
+                                <span class="text-base">${rec}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div class="bg-blue-50 p-4 rounded-xl border border-blue-200 flex flex-col md:flex-row">
+                    <div class="text-blue-500 mr-4 text-center md:text-left mb-2 md:mb-0">
+                        <i class="fas fa-info-circle text-xl"></i>
+                    </div>
+                    <p class="text-gray-700 text-sm">
+                        <span class="font-medium text-blue-700 block mb-1">Disclaimer:</span> 
+                        This assessment is not a medical diagnosis. Always consult healthcare professionals for personalized medical advice.
+                    </p>
+                </div>
+            </div>
+        `;
+
+        resultContent.innerHTML = resultHTML;
+
+        // Add Meditation Recommendations
+        const meditationLinks = meditationRecommendations[riskCategory].links;
+        meditationLinksContainer.innerHTML = meditationLinks.map(link => `
+            <a href="${link.url}" class="meditation-link block p-4 rounded-lg bg-white border border-gray-100 shadow-sm transition duration-300 hover:shadow-md">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center mr-3">
+                        <i class="fas ${link.icon || 'fa-spa'} text-pink-500"></i>
+                    </div>
+                    <span class="font-medium text-gray-800 text-sm">${link.name}</span>
+                </div>
+            </a>
+        `).join('');
+        
+        meditationRecommendationSection.classList.remove('hidden');
+    }
+</script>
+{% endblock %}

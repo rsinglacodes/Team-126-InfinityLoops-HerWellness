@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Holistic Wellness Companion</title>
+    <style>
+        :root {
+            --primary-color: #FFB6C1;  /* Light Pink */
+            --secondary-color: #E6E6FA;  /* Lavender */
+            --text-color: #4A4A4A;
+            --background-color: #FFF0F5;  /* Lavender Blush */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .wellness-container {
+            background-color: var(--secondary-color);
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+            color: var(--text-color);
+        }
+
+        .category-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background-color: #D896A1; /* Darker shade of primary */
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .recommendation-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .recommendation-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .recommendation-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .recommendation-card h3 {
+            margin-top: 10px;
+            color: var(--text-color);
+        }
+
+        .recommendation-card p {
+            color: var(--text-color);
+            font-size: 0.9em;
+        }
+
+        .recommendation-time {
+            color: #777;
+            font-style: italic;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+            .recommendations {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wellness-container">
+        <h1>Self-Care Recommendations</h1>
+        
+        <div class="category-buttons" id="categoryButtons">
+            <button class="category-btn active" data-category="morning">Morning Rituals</button>
+            <button class="category-btn" data-category="afternoon">Midday Reset</button>
+            <button class="category-btn" data-category="evening">Evening Wind Down</button>
+            <button class="category-btn" data-category="mindfulness">Mindfulness</button>
+            <button class="category-btn" data-category="physical">Physical Wellness</button>
+        </div>
+
+        <div class="recommendations" id="recommendationsContainer">
+            <!-- Recommendations will be dynamically populated here -->
+        </div>
+    </div>
+
+    <script>
+        const wellnessActivities = {
+            morning: [
+                {
+                    icon: '☀',
+                    title: 'Sunrise Meditation',
+                    description: 'Start your day with a 15-minute mindfulness practice. Focus on deep breathing and setting positive intentions for the day.',
+                    time: '15 mins'
+                },
+                {
+                    icon: '📝',
+                    title: 'Gratitude Journaling',
+                    description: 'Write down 5 things you\'re grateful for. Reflect on personal growth and positive moments from yesterday.',
+                    time: '20 mins'
+                },
+                {
+                    icon: '🍎',
+                    title: 'Nutritious Breakfast',
+                    description: 'Prepare a balanced breakfast with proteins, whole grains, and fruits. Hydrate with warm lemon water.',
+                    time: '30 mins'
+                },
+                {
+                    icon: '🧘‍♀',
+                    title: 'Morning Stretch',
+                    description: 'Gentle yoga or stretching routine to awaken the body and improve flexibility.',
+                    time: '15 mins'
+                },
+                {
+                    icon: '📚',
+                    title: 'Learning Time',
+                    description: 'Spend time reading, listening to a podcast, or learning something new.',
+                    time: '20 mins'
+                },
+                {
+                    icon: '📅',
+                    title: 'Day Planning',
+                    description: 'Review your goals, create a to-do list, and prioritize tasks for the day.',
+                    time: '15 mins'
+                }
+            ],
+            afternoon: [
+                {
+                    icon: '🌿',
+                    title: 'Nature Connection',
+                    description: 'Take a mindful walk outside. Observe nature, practice walking meditation, or do light stretching.',
+                    time: '20-30 mins'
+                },
+                {
+                    icon: '🧘‍♀',
+                    title: 'Desk Yoga',
+                    description: 'Perform gentle stretches and seated yoga poses to release tension and improve circulation.',
+                    time: '15 mins'
+                },
+                {
+                    icon: '🎧',
+                    title: 'Mindful Music Break',
+                    description: 'Listen to calming instrumental music or a guided relaxation track to reset your mental state.',
+                    time: '15-20 mins'
+                },
+                {
+                    icon: '🍵',
+                    title: 'Herbal Tea Ritual',
+                    description: 'Prepare and mindfully enjoy a cup of herbal tea. Practice mindful drinking.',
+                    time: '15 mins'
+                },
+                {
+                    icon: '🧩',
+                    title: 'Brain Refresh',
+                    description: 'Do a quick puzzle, crossword, or brain-training activity to stay mentally sharp.',
+                    time: '15 mins'
+                },
+                {
+                    icon: '📞',
+                    title: 'Social Connection',
+                    description: 'Call a friend or loved one for a short, meaningful conversation.',
+                    time: '20 mins'
+                }
+            ],
+            evening: [
+                {
+                    icon: '📖',
+                    title: 'Reflective Reading',
+                    description: 'Read an inspirational book or listen to a calming podcast. Avoid digital screens before bedtime.',
+                    time: '30-45 mins'
+                },
+                {
+                    icon: '🛀',
+                    title: 'Self-Care Ritual',
+                    description: 'Take a warm bath with essential oils, do a skincare routine, or practice gentle self-massage.',
+                    time: '30 mins'
+                },
+                {
+                    icon: '🌙',
+                    title: 'Sleep Preparation',
+                    description: 'Create a calm environment. Practice relaxation techniques, dim lights, and prepare for restful sleep.',
+                    time: '20-30 mins'
+                },
+                {
+                    icon: '📝',
+                    title: 'Evening Reflection',
+                    description: 'Journal about your day, achievements, and things you\'re looking forward to tomorrow.',
+                    time: '15-20 mins'
+                },
+                {
+                    icon: '🕯',
+                    title: 'Aromatherapy',
+                    description: 'Use essential oils or scented candles to create a relaxing atmosphere.',
+                    time: '15 mins'
+                },
+                {
+                    icon: '🎵',
+                    title: 'Gentle Music',
+                    description: 'Listen to soft, calming music to help transition into a restful state.',
+                    time: '20 mins'
+                }
+            ],
+            mindfulness: [
+                {
+                    icon: '🧠',
+                    title: 'Mindful Breathing',
+                    description: 'Practice various breathing techniques like box breathing, 4-7-8 method, or alternate nostril breathing.',
+                    time: '10-15 mins'
+                },
+                {
+                    icon: '🌈',
+                    title: 'Visualization Meditation',
+                    description: 'Guided imagery meditation focusing on peaceful scenes, personal goals, and positive affirmations.',
+                    time: '20 mins'
+                },
+                {
+                    icon: '🌻',
+                    title: 'Emotional Check-In',
+                    description: 'Journaling or meditation to process emotions, identify triggers, and practice self-compassion.',
+                    time: '15-20 mins'
+                },
+                {
+                    icon: '🌊',
+                    title: 'Body Scan Meditation',
+                    description: 'Systematically relax each part of your body, releasing tension and promoting awareness.',
+                    time: '20 mins'
+                },
+                {
+                    icon: '🌱',
+                    title: 'Mindful Walking',
+                    description: 'Practice walking meditation, focusing on each step and your connection to the ground.',
+                    time: '15-20 mins'
+                },
+                {
+                    icon: '📿',
+                    title: 'Mantra Meditation',
+                    description: 'Repeat a positive affirmation or mantra to cultivate inner peace and focus.',
+                    time: '10-15 mins'
+                }
+            ],
+            physical: [
+                {
+                    icon: '💪',
+                    title: 'Home Workout',
+                    description: 'Bodyweight exercises, yoga, pilates, or follow an online fitness video tailored to your fitness level.',
+                    time: '30-45 mins'
+                },
+                {
+                    icon: '🚶‍♀',
+                    title: 'Active Movement',
+                    description: 'Go for a walk, dance, cycle, or engage in any physical activity you enjoy.',
+                    time: '30-60 mins'
+                },
+                {
+                    icon: '🥗',
+                    title: 'Nutrition Planning',
+                    description: 'Prepare nutritious meals, plan healthy snacks, and stay hydrated throughout the day.',
+                    time: '30-45 mins'
+                },
+                {
+                    icon: '🏋‍♀',
+                    title: 'Strength Training',
+                    description: 'Resistance exercises using bodyweight, resistance bands, or light weights.',
+                    time: '30 mins'
+                },
+                {
+                    icon: '🧘‍♂',
+                    title: 'Flexibility Work',
+                    description: 'Stretching routine or gentle yoga to improve flexibility and prevent injuries.',
+                    time: '20-30 mins'
+                },
+                {
+                    icon: '🚴‍♀',
+                    title: 'Cardio Session',
+                    description: 'Engage in cardiovascular exercise like running, cycling, or high-intensity interval training.',
+                    time: '30-45 mins'
+                }
+            ]
+        };
+
+        const categoryButtons = document.getElementById('categoryButtons');
+        const recommendationsContainer = document.getElementById('recommendationsContainer');
+
+        function displayRecommendations(category) {
+            recommendationsContainer.innerHTML = '';
+
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+
+            wellnessActivities[category].forEach(activity => {
+                const card = document.createElement('div');
+                card.classList.add('recommendation-card');
+                card.innerHTML = `
+                    <div class="recommendation-icon">${activity.icon}</div>
+                    <h3>${activity.title}</h3>
+                    <p>${activity.description}</p>
+                    <div class="recommendation-time">${activity.time}</div>
+                `;
+                recommendationsContainer.appendChild(card);
+            });
+        }
+
+        displayRecommendations('morning');
+
+        categoryButtons.addEventListener('click', (e) => {
+            if (e.target.classList.contains('category-btn')) {
+                const category = e.target.dataset.category;
+                displayRecommendations(category);
+            }
+        });
+    </script>
+</body>
+</html>
